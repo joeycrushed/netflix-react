@@ -42,6 +42,4 @@ function LoginScreen() {
     )
 }
 
-/* 41.26 */
-
 export default LoginScreen
