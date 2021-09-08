@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { auth } from '../firebase'
 import './SignupScreen.css';
 
 
 function SignupScreen() {
+const emailRef = useRef(null);
+const passwordRef = useRef(null);
+
+
+    const register = (e) => {
+        e.preventDefault();
+
+        
+    }
+
+    const signIn = (e) => {
+        e.preventDefault();
+    }
+
 
     return (
         <div className="signupScreen">
