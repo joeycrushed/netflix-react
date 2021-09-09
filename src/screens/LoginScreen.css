@@ -66,6 +66,7 @@
     color: white;
     background-color: #e50914;
     border: none;
+    cursor: pointer;
 }
 
 .loginScreen__input {
