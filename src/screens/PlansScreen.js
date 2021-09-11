@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { selectUser } from '../features/counter/userSlice'
 import db from '../firebase'
+import './PlansScreen.css'
+import  { loadStripe } from '@stripe/stripe-js'
 
 function PlansScreen() {
 
     const [products, setProducts] = useState([]);
+    const user = useSelector(selectUser)
 
     useEffect(() => {
         db.collection('products').where('active', '==', true)
@@ -25,7 +30,33 @@ function PlansScreen() {
     }, [])
 
     console.log(products)
-    // 1.17.47
+
+    const loadCheckout = async (priceId) => {
+        const docRef = await db
+            .collection('customers')
+            .doc(user.uid)
+            .collection('checkout_session')
+            .add({
+                price: priceId,
+                success_url: window.location.origin,
+                cancel_url: window.location.origin,
+
+            });
+
+            docRef.onSnapshot(async(snap) => {
+                const { error, sessionId } = snap.data()
+
+                if (error) {
+                    alert(`An error occured: ${error.message}`)
+                }
+                if (sessionId) {
+                    const stripe = await loadStripe(
+                        'sk_test_51JXorYG0KEQXDnR8NN27QTUm78r1DWkn0PiMKR51vEymHUnXeLcPAJheIIAPsNHJlYRTi6qzFCxi6Bsxlaeqrsdc00a850Lc7k'
+                    )
+                    stripe.redirectToCheckout({ sessionId })
+                }
+            })
+    }
 
     return (
         <div className="plansScreen">
@@ -36,10 +67,8 @@ function PlansScreen() {
                         <div className="plansScreen__info">
                             <h5>{productData.name}</h5>
                             <h6>{productData.description}</h6>
-                            <button>
-                                Subscribe
-                            </button>
                         </div>
+                        <button onClick={() => loadCheckout(productData.prices.priceId)}>Subscribe</button>
                     </div>
                 )
             })}
