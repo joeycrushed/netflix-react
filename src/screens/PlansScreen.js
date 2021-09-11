@@ -29,7 +29,20 @@ function PlansScreen() {
 
     return (
         <div className="plansScreen">
-            
+            {Object.entries(products).map(([productID, productData]) => {
+                // add some logic to check if user sub is active
+                return (
+                    <div className="plansScreen__plan">
+                        <div className="plansScreen__info">
+                            <h5>{productData.name}</h5>
+                            <h6>{productData.description}</h6>
+                            <button>
+                                Subscribe
+                            </button>
+                        </div>
+                    </div>
+                )
+            })}
         </div>
     )
 }
